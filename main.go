@@ -17,7 +17,7 @@ var exitCodes = prometheus.NewGaugeVec(
 		Name: "docker_container_exit_codes",
 		Help: "Exit codes of Docker containers",
 	},
-	[]string{"container_id", "container_name"},
+	[]string{"container_id", "container_name", "exit_code"},
 )
 
 func init() {
@@ -42,7 +42,7 @@ func listenToDockerEvents() {
 				if err != nil {
 					log.Printf("Failed to parse exit code for container %s (%s): %s", containerID, containerName, err.Error())
 				} else {
-					exitCodes.WithLabelValues(containerID, containerName).Set(exitCode)
+					exitCodes.WithLabelValues(containerID, containerName, exitCodeStr).Set(exitCode)
 				}
 			}
 		case err := <-errs:
