@@ -40,9 +40,10 @@ func listenToDockerEvents() {
 				containerName := event.Actor.Attributes["name"]
 				exitCode, err := strconv.ParseFloat(exitCodeStr, 64)
 				if err != nil {
-					log.Printf("Failed to parse exit code for container %s (%s): %s", containerID, containerName, err.Error())
+					log.Printf("Failed to parse exit code for container %s (%s) with exit code %s: %s", containerID, containerName, exitCodeStr, err.Error())
 				} else {
 					exitCodes.WithLabelValues(containerID, containerName, exitCodeStr).Set(exitCode)
+					log.Printf("Container %s (%s) exited with code %s", containerID, containerName, exitCodeStr)
 				}
 			}
 		case err := <-errs:
